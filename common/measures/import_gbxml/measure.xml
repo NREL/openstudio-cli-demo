@@ -2,8 +2,8 @@
   <schema_version>3.0</schema_version>
   <name>import_gbxml</name>
   <uid>a335136f-bad3-451d-a585-9ea31249e38b</uid>
-  <version_id>36ccbc1c-5721-423a-b687-47c1ae2178ee</version_id>
-  <version_modified>20180213T200920Z</version_modified>
+  <version_id>179fe369-690d-4ff4-af55-dfb9a622e4b3</version_id>
+  <version_modified>20180213T204250Z</version_modified>
   <xml_checksum>DA3B952E</xml_checksum>
   <class_name>ImportGbxml</class_name>
   <display_name>ImportGbxml</display_name>
@@ -11,9 +11,9 @@
   <modeler_description>Import a gbXML file</modeler_description>
   <arguments>
     <argument>
-      <name>space_name</name>
-      <display_name>New space name</display_name>
-      <description>This name will be used as the name of the new space.</description>
+      <name>gbxml_file_name</name>
+      <display_name>gbXML filename</display_name>
+      <description>Filename or full path to gbXML file.</description>
       <type>String</type>
       <required>true</required>
       <model_dependent>false</model_dependent>
@@ -76,19 +76,19 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>B93DFBE6</checksum>
+      <checksum>D001DC29</checksum>
     </file>
     <file>
       <filename>import_gbxml_test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>64259B08</checksum>
+      <checksum>3F13F2CF</checksum>
     </file>
     <file>
-      <filename>example_model.osm</filename>
-      <filetype>osm</filetype>
+      <filename>gbXMLStandard Test Model 2016.xml</filename>
+      <filetype>xml</filetype>
       <usage_type>test</usage_type>
-      <checksum>53D14E69</checksum>
+      <checksum>D39FE3DA</checksum>
     </file>
   </files>
 </measure>
