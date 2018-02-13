@@ -2,8 +2,8 @@
   <schema_version>3.0</schema_version>
   <name>change_building_location</name>
   <uid>d4db4971-f5ba-11e3-a3ac-0800200c9a66</uid>
-  <version_id>04d1e937-c0da-4e99-b815-fca47baaeac5</version_id>
-  <version_modified>20170711T201203Z</version_modified>
+  <version_id>c32713aa-d379-49e8-9882-9779718561f0</version_id>
+  <version_modified>20180213T212450Z</version_modified>
   <xml_checksum>057E8D9D</xml_checksum>
   <class_name>ChangeBuildingLocation</class_name>
   <display_name>ChangeBuildingLocation</display_name>
@@ -216,6 +216,12 @@
       <checksum>F5FABCCF</checksum>
     </file>
     <file>
+      <filename>change_building_location_test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>41755DC7</checksum>
+    </file>
+    <file>
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>1.3.4</identifier>
@@ -224,13 +230,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>E69CBFDD</checksum>
-    </file>
-    <file>
-      <filename>change_building_location_test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>41755DC7</checksum>
+      <checksum>49E6750D</checksum>
     </file>
   </files>
 </measure>

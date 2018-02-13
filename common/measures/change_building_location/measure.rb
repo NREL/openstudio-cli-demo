@@ -56,6 +56,11 @@ class ChangeBuildingLocation < OpenStudio::Ruleset::ModelUserScript
     if not runner.validateUserArguments(arguments(model), user_arguments)
       return false
     end
+    
+    # silence warnings
+    yd = model.getYearDescription
+    yd.setDayofWeekforStartDay('Sunday')
+    yd.setIsLeapYear(false)
 
     # create initial condition
     if not model.getWeatherFile.city == ''
