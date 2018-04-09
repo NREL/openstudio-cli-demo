@@ -313,6 +313,9 @@ class CreateBarFromBuildingTypeRatios < OpenStudio::Ruleset::ModelUserScript
       return false
     end
 
+    # Make the standard applier
+    standard = Standard.build("#{args['template']}_#{args['bldg_type_a']}")
+    
     # report initial condition of model
     runner.registerInitialCondition("The building started with #{model.getSpaces.size} spaces.")
 
@@ -361,7 +364,7 @@ class CreateBarFromBuildingTypeRatios < OpenStudio::Ruleset::ModelUserScript
       runner.registerInfo("Creating Space Types for #{building_type}.")
 
       # mapping building_type name is needed for a few methods
-      building_type = model.get_lookup_name(building_type)
+      building_type = standard.model_get_lookup_name(building_type)
 
       # create space_type_map from array
       sum_of_ratios = 0.0
@@ -375,7 +378,7 @@ class CreateBarFromBuildingTypeRatios < OpenStudio::Ruleset::ModelUserScript
         space_type.setName("#{building_type} #{space_type_name}")
 
         # set color
-        test = space_type.apply_rendering_color(args['template']) # this uses openstudio-standards
+        test = standard.space_type_apply_rendering_color(space_type) # this uses openstudio-standards
         if not test
           runner.registerWarning("Could not find color for #{args['template']} #{space_type.name}")
         end

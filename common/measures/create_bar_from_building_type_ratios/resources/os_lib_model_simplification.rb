@@ -338,12 +338,12 @@ module OsLib_ModelSimplification
         # ratios
         ratios = {}
         if collection_floor_area > 0
-          ratios[:floor_area_ratio] = ext_surface_area/collection_floor_area
+          ratios[:floor_area_ratio] = floor_area/collection_floor_area
         else
           ratios[:floor_area_ratio] = 0.0
         end
         if collection_num_people > 0
-          ratios[:num_people_ratio] = ext_surface_area/collection_num_people
+          ratios[:num_people_ratio] = num_people/collection_num_people
         else
           ratios[:num_people_ratio] = 0.0
         end
@@ -353,12 +353,12 @@ module OsLib_ModelSimplification
           ratios[:ext_surface_area_ratio] = 0.0
         end
         if collection_ext_wall_area > 0
-          ratios[:ext_wall_area_ratio] = ext_surface_area/collection_ext_wall_area
+          ratios[:ext_wall_area_ratio] = ext_wall_area/collection_ext_wall_area
         else
           ratios[:ext_wall_area_ratio] = 0.0
         end
         if collection_volume > 0
-          ratios[:volume_ratio] = ext_surface_area/collection_volume
+          ratios[:volume_ratio] = volume/collection_volume
         else
           ratios[:volume_ratio] = 0.0
         end

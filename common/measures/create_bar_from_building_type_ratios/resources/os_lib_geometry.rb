@@ -36,7 +36,7 @@ module OsLib_Geometry
 
       if flag then counter += 1 end
 
-    end #end of surfaceArray.each do
+    end
 
     result = counter
     return result
@@ -56,7 +56,7 @@ module OsLib_Geometry
         # push z value to array
         zValueArray << vertex.z
       end
-    end #end of surfaceArray.each do
+    end
 
     result = zValueArray
     return result
@@ -157,7 +157,7 @@ module OsLib_Geometry
         onSurfacesFlag = true
       end
 
-    end # end of surfaceArray.each do
+    end
 
     if onSurfacesFlag
       result = true
@@ -200,8 +200,8 @@ module OsLib_Geometry
 
         total_gross_ext_wall_area += surface_gross_area
         total_ext_window_area += ext_window_area
-      end #end of surfaces.each do
-    end # end of space.each do
+      end
+    end
 
     if total_gross_ext_wall_area > 0
       result = total_ext_window_area/total_gross_ext_wall_area
@@ -800,8 +800,8 @@ module OsLib_Geometry
           total_ext_window_area_North += ext_window_area
         end
 
-      end #end of surfaces.each do
-    end # end of space.each do
+      end
+    end
 
     result = {"northWall"=> total_gross_ext_wall_area_North,
               "northWindow"=> total_ext_window_area_North,
