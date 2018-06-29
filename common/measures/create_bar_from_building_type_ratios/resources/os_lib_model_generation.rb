@@ -34,6 +34,7 @@ module OsLib_ModelGeneration
     # array << '189.1-2009' # if turn this on need to update space_type_array for stripmall
     array << '90.1-2010'
     array << '90.1-2013'
+    array << 'NREL ZNE Ready 2017'
 
     return array
   end
@@ -77,6 +78,7 @@ module OsLib_ModelGeneration
     hash['Warehouse'] = {:aspect_ratio => 2.2, :wwr => 0.71, :typical_story => 28.0}
     hash['QuickServiceRestaurant'] = {:aspect_ratio => 1.0, :wwr => 0.14, :typical_story => 10.0}
     hash['FullServiceRestaurant'] = {:aspect_ratio => 1.0, :wwr => 0.18, :typical_story => 10.0}
+    hash['QuickServiceRestaurant'] = {:aspect_ratio => 1.0, :wwr => 0.18, :typical_story => 10.0}
     hash['MidriseApartment'] = {:aspect_ratio => 2.75, :wwr => 0.15, :typical_story => 10.0}
     hash['HighriseApartment'] = {:aspect_ratio => 2.75, :wwr => 0.15, :typical_story => 10.0}
     # SuperMarket inputs come from prototype model

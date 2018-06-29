@@ -20,7 +20,7 @@ module OsLib_HelperMethods
 
     result = { 'modelObject_handles' => modelObject_handles, 'modelObject_display_names' => modelObject_display_names }
     return result
-  end # end of OsLib_HelperMethods.populateChoiceArgFromModelObjects
+  end
 
   # create variables in run from user arguments
   def self.createRunVariables(runner, model, user_arguments, arguments)
@@ -82,10 +82,10 @@ module OsLib_HelperMethods
         runner.registerError("Script Error - argument not showing up as #{variableName}.")
         return false
       end
-    end  # end of if construction.empty?
+    end
 
     result = { 'modelObject' => modelObject, 'apply_to_building' => apply_to_building }
-  end # end of OsLib_HelperMethods.checkChoiceArgFromModelObjects
+  end
 
   # check choice argument made from model objects
   def self.checkOptionalChoiceArgFromModelObjects(object, variableName, to_ObjectType, runner, user_arguments)
@@ -111,10 +111,10 @@ module OsLib_HelperMethods
         runner.registerError("Script Error - argument not showing up as #{variableName}.")
         return false
       end
-    end  # end of if construction.empty?
+    end
 
     result = { 'modelObject' => modelObject, 'apply_to_building' => apply_to_building }
-  end # end of OsLib_HelperMethods.checkChoiceArgFromModelObjects
+  end
 
   # check value of double arguments
   def self.checkDoubleAndIntegerArguments(runner, user_arguments, arg_check_hash)
@@ -266,7 +266,7 @@ module OsLib_HelperMethods
 
     result = { 'totalArea' => totalArea, 'spaceAreaHash' => spaceAreaHash }
     return result
-  end # end of getAreaOfSpacesInArray
+  end
 
   # runs conversion and neat string, and returns value with units in string, optionally before or after the value
   def self.neatConvertWithUnitDisplay(double, fromString, toString, digits, unitBefore = false, unitAfter = true, space = true, parentheses = true)
@@ -314,7 +314,7 @@ module OsLib_HelperMethods
     finalString = "#{prefix}#{neatConverted}#{suffix}"
 
     return finalString
-  end # end of getAreaOfSpacesInArray
+  end
 
   # helper that loops through lifecycle costs getting total costs under "Construction" and add to counter if occurs during year 0
   def self.getTotalCostForObjects(objectArray, category = 'Construction', onlyYearFromStartZero = true)
@@ -331,7 +331,7 @@ module OsLib_HelperMethods
     end
 
     return counter
-  end # end of def get_total_costs_for_objects(objects)
+  end
 
   # helper that loops through lifecycle costs getting total costs under "Construction" and add to counter if occurs during year 0
   def self.getSpaceTypeStandardsInformation(spaceTypeArray)
@@ -355,10 +355,10 @@ module OsLib_HelperMethods
 
       # populate hash
       spaceTypeStandardsInfoHash[spaceType] = [standardsBuilding, standardsSpaceType]
-    end # end of spaceTypeArray each do
+    end
 
     return spaceTypeStandardsInfoHash
-  end # end of def get_total_costs_for_objects(objects)
+  end
 
   # OpenStudio has built in toNeatString method
   # OpenStudio::toNeatString(double,2,true)# double,decimals, show commas
