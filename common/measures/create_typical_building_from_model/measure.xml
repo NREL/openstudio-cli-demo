@@ -2,8 +2,8 @@
   <schema_version>3.0</schema_version>
   <name>create_typical_building_from_model</name>
   <uid>339a2e3a-273c-4494-bb50-bfe586a0647c</uid>
-  <version_id>833d646a-1391-4e85-9083-77d64ed7c2dd</version_id>
-  <version_modified>20180213T181413Z</version_modified>
+  <version_id>b969048a-a312-419e-bf4a-524710f03aca</version_id>
+  <version_modified>20180522T170859Z</version_modified>
   <xml_checksum>EE13F09F</xml_checksum>
   <class_name>CreateTypicalBuildingFromModel</class_name>
   <display_name>Create Typical Building from Model</display_name>
@@ -41,6 +41,10 @@
         <choice>
           <value>90.1-2013</value>
           <display_name>90.1-2013</display_name>
+        </choice>
+        <choice>
+          <value>NREL ZNE Ready 2017</value>
+          <display_name>NREL ZNE Ready 2017</display_name>
         </choice>
       </choices>
     </argument>
@@ -608,58 +612,46 @@
   </attributes>
   <files>
     <file>
-      <filename>SmallOffice.osm</filename>
-      <filetype>osm</filetype>
-      <usage_type>test</usage_type>
-      <checksum>4DE95BEF</checksum>
-    </file>
-    <file>
-      <filename>MidriseApartment.osm</filename>
-      <filetype>osm</filetype>
-      <usage_type>test</usage_type>
-      <checksum>AFAF7439</checksum>
-    </file>
-    <file>
       <filename>test.osw</filename>
       <filetype>osw</filetype>
       <usage_type>test</usage_type>
       <checksum>6DB338FC</checksum>
     </file>
     <file>
-      <filename>os_lib_helper_methods.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>02263B97</checksum>
+      <filename>SmallOffice.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>519B22EB</checksum>
+    </file>
+    <file>
+      <filename>MidriseApartment.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>EB7A2671</checksum>
     </file>
     <file>
       <filename>LargeOffice04.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
-      <checksum>1F375CE5</checksum>
-    </file>
-    <file>
-      <filename>Model.hvac.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>6C20C818</checksum>
+      <checksum>5415617A</checksum>
     </file>
     <file>
       <filename>test_hvac.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>E7D4E373</checksum>
+      <checksum>3F28DB5B</checksum>
     </file>
     <file>
-      <filename>os_lib_model_generation.rb</filename>
+      <filename>Model.hvac.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
-      <checksum>FF7E1F31</checksum>
+      <checksum>AE1BD721</checksum>
     </file>
     <file>
       <filename>create_typical_building_from_model_test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>77EBCBD3</checksum>
+      <checksum>1CDEFD08</checksum>
     </file>
     <file>
       <version>
@@ -670,7 +662,19 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>625BB367</checksum>
+      <checksum>53126E39</checksum>
+    </file>
+    <file>
+      <filename>os_lib_helper_methods.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>9CFC43FB</checksum>
+    </file>
+    <file>
+      <filename>os_lib_model_generation.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>D280FC42</checksum>
     </file>
   </files>
 </measure>

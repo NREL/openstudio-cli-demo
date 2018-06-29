@@ -5231,11 +5231,7 @@ OS:ClimateZones,
   ASHRAE,                                 !- Climate Zone Institution Name 1
   ANSI/ASHRAE Standard 169,               !- Climate Zone Document Name 1
   2006,                                   !- Climate Zone Document Year 1
-  2A,                                     !- Climate Zone Value 1
-  CEC,                                    !- Climate Zone Institution Name 2
-  California Climate Zone Descriptions,   !- Climate Zone Document Name 2
-  1995,                                   !- Climate Zone Document Year 2
-  ;                                       !- Climate Zone Value 2
+  2A;                                    !- Climate Zone Value 1
 
 OS:BuildingStory,
   {757d02d3-04ba-481e-9af7-6aa5b53ffb79}, !- Handle

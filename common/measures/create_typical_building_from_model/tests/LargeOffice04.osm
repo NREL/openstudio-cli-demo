@@ -19510,14 +19510,10 @@ OS:ClimateZones,
   {00c183dc-0bdd-4314-aec2-3cb1f7770898}, !- Handle
   ,                                       !- Active Institution
   ,                                       !- Active Year
-  ,                                       !- Climate Zone Institution Name 1
-  ,                                       !- Climate Zone Document Name 1
-  ,                                       !- Climate Zone Document Year 1
-  5B,                                     !- Climate Zone Value 1
-  CEC,                                    !- Climate Zone Institution Name 2
-  California Climate Zone Descriptions,   !- Climate Zone Document Name 2
-  1995,                                   !- Climate Zone Document Year 2
-  ;                                       !- Climate Zone Value 2
+  ASHRAE,                                 !- Climate Zone Institution Name 1
+  ANSI/ASHRAE Standard 169,               !- Climate Zone Document Name 1
+  2006,                                   !- Climate Zone Document Year 1
+  5B;                                     !- Climate Zone Value 1
 
 OS:BuildingStory,
   {67895b83-0b57-4663-af54-14c42978da0c}, !- Handle
