@@ -45,8 +45,8 @@ module OsLib_ModelGeneration
     array << 'SmallHotel'
     array << 'LargeHotel'
     array << 'Warehouse'
-    array << 'Retail'
-    array << 'StripMall'
+    array << 'RetailStandalone'
+    array << 'RetailStripmall'
     array << 'QuickServiceRestaurant'
     array << 'FullServiceRestaurant'
     array << 'MidriseApartment'
@@ -65,7 +65,7 @@ module OsLib_ModelGeneration
     array << 'DOE Ref 1980-2004'
     array << '90.1-2004'
     array << '90.1-2007'
-    # array << '189.1-2009' # if turn this on need to update space_type_array for stripmall
+    # array << '189.1-2009' # if turn this on need to update space_type_array for RetailStripmall
     array << '90.1-2010'
     array << '90.1-2013'
     array << 'NREL ZNE Ready 2017'
@@ -99,8 +99,8 @@ module OsLib_ModelGeneration
     hash['SmallOffice'] = { aspect_ratio: 1.5, wwr: 0.15, typical_story: 10.0 }
     hash['MediumOffice'] = { aspect_ratio: 1.5, wwr: 0.33, typical_story: 13.0 }
     hash['LargeOffice'] = { aspect_ratio: 1.5, wwr: 0.15, typical_story: 13.0 }
-    hash['Retail'] = { aspect_ratio: 1.28, wwr: 0.07, typical_story: 20.0 }
-    hash['StripMall'] = { aspect_ratio: 4.0, wwr: 0.11, typical_story: 17.0 }
+    hash['RetailStandalone'] = { aspect_ratio: 1.28, wwr: 0.07, typical_story: 20.0 }
+    hash['RetailStripmall'] = { aspect_ratio: 4.0, wwr: 0.11, typical_story: 17.0 }
     hash['PrimarySchool'] = { aspect_ratio: primary_aspet_ratio.round(1), wwr: 0.35, typical_story: 13.0 }
     hash['SecondarySchool'] = { aspect_ratio: secondary_aspet_ratio.round(1), wwr: 0.33, typical_story: 13.0 }
     hash['Outpatient'] = { aspect_ratio: outpatient_aspet_ratio.round(1), wwr: 0.20, typical_story: 10.0 }
@@ -280,12 +280,12 @@ module OsLib_ModelGeneration
       hash['Bulk'] = { ratio: 0.6628, space_type_gen: true, default: true }
       hash['Fine'] = { ratio: 0.2882, space_type_gen: true, default: false }
       hash['Office'] = { ratio: 0.0490, space_type_gen: true, default: false }
-    elsif building_type == 'Retail'
+    elsif building_type == 'RetailStandalone'
       hash['Back_Space'] = { ratio: 0.1656, space_type_gen: true, default: false }
       hash['Entry'] = { ratio: 0.0052, space_type_gen: true, default: false }
       hash['Point_of_Sale'] = { ratio: 0.0657, space_type_gen: true, default: false }
       hash['Retail'] = { ratio: 0.7635, space_type_gen: true, default: true }
-    elsif building_type == 'StripMall'
+    elsif building_type == 'RetailStripmall'
       hash['Strip mall - type 1'] = { ratio: 0.25, space_type_gen: true, default: false }
       hash['Strip mall - type 2'] = { ratio: 0.25, space_type_gen: true, default: false }
       hash['Strip mall - type 3'] = { ratio: 0.50, space_type_gen: true, default: true }

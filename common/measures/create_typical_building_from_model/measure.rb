@@ -258,6 +258,13 @@ class CreateTypicalBuildingFromModel < OpenStudio::Measure::ModelMeasure
     remove_objects.setDefaultValue(true)
     args << remove_objects
 
+    # make an argument for use_upstream_args
+    use_upstream_args = OpenStudio::Measure::OSArgument.makeBoolArgument('use_upstream_args', true)
+    use_upstream_args.setDisplayName('Use Upstream Argument Values')
+    use_upstream_args.setDescription('When true this will look for arguments or registerValues in upstream measures that match arguments from this measure, and will use the value from the upstream measure in place of what is entered for this measure.')
+    use_upstream_args.setDefaultValue(true)
+    args << use_upstream_args
+
     return args
   end
 
@@ -269,16 +276,31 @@ class CreateTypicalBuildingFromModel < OpenStudio::Measure::ModelMeasure
     args = OsLib_HelperMethods.createRunVariables(runner, model, user_arguments, arguments(model))
     if !args then return false end
 
+    # lookup and replace argument values from upstream measures
+    if args['use_upstream_args'] == true
+      args.each do |arg,value|
+        next if arg == 'use_upstream_args' # this argument should not be changed
+        value_from_osw = OsLib_HelperMethods.check_upstream_measure_for_arg(runner, arg)
+        if !value_from_osw.empty?
+          runner.registerInfo("Replacing argument named #{arg} from current measure with a value of #{value_from_osw[:value]} from #{value_from_osw[:measure_name]}.")
+          new_val = value_from_osw[:value]
+          # todo - make code to handle non strings more robust. check_upstream_measure_for_arg coudl pass bakc the argument type
+          if arg == 'total_bldg_floor_area'
+            args[arg] = new_val.to_f
+          elsif arg == 'num_stories_above_grade'
+            args[arg] = new_val.to_f
+          elsif arg == 'zipcode'
+            args[arg] = new_val.to_i
+          else
+            args[arg] = new_val
+          end
+        end
+      end
+    end
+
+    # validate fraction parking
     fraction = OsLib_HelperMethods.checkDoubleAndIntegerArguments(runner, user_arguments, 'min' => 0.0, 'max' => 1.0, 'min_eq_bool' => true, 'max_eq_bool' => true, 'arg_array' => ['onsite_parking_fraction'])
     if !fraction then return false end
-
-    # look at upstream measure for 'template' argument
-    # todo - in future make template in this measure an optional argument and only override value when it is not initialized. There may be valid use cases for using different template values in different measures within the same workflow.
-    template_value_from_osw = OsLib_HelperMethods.check_upstream_measure_for_arg(runner, 'template')
-    if !template_value_from_osw.empty?
-      runner.registerInfo("Replacing argument named 'template' from current measure with a value of #{template_value_from_osw[:value]} from #{template_value_from_osw[:measure_name]}.")
-      args['template'] = template_value_from_osw[:value]
-    end
 
     # report initial condition of model
     initial_objects = model.getModelObjects.size
