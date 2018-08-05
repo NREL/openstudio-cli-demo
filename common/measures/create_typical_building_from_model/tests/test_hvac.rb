@@ -5,9 +5,7 @@ require_relative '../measure.rb'
 require 'fileutils'
 
 class AddHVACSystemTest < MiniTest::Unit::TestCase
-
   def test_add_hvac_systems
-
     # Get the original working directory
     start_dir = Dir.pwd
 
@@ -80,10 +78,9 @@ class AddHVACSystemTest < MiniTest::Unit::TestCase
     # and run a sizing run to ensure it simulates.
     errs = []
     hvac_systems.each do |system_type, allowable_htg_unmet_hrs, allowable_clg_unmet_hrs|
-
       reset_log
 
-      model_dir = "#{output_dir}/#{system_type.gsub('/','')}"
+      model_dir = "#{output_dir}/#{system_type.delete('/')}"
       FileUtils.mkdir model_dir unless Dir.exist? model_dir
       Dir.chdir(model_dir)
 
@@ -94,7 +91,6 @@ class AddHVACSystemTest < MiniTest::Unit::TestCase
         model = OpenStudio::Model::Model.new
         sql = safe_load_sql("#{model_dir}/AR/run/eplusout.sql")
         model.setSqlFile(sql)
-
 
       # If not created, make and run annual simulation
       else
@@ -113,7 +109,7 @@ class AddHVACSystemTest < MiniTest::Unit::TestCase
         tol = model.getOutputControlReportingTolerances
         tol.setToleranceforTimeHeatingSetpointNotMet(unmet_hrs_tol_k)
         tol.setToleranceforTimeCoolingSetpointNotMet(unmet_hrs_tol_k)
-        
+
         # create an instance of the measure
         measure = CreateTypicalBuildingFromModel.new
 
@@ -152,7 +148,7 @@ class AddHVACSystemTest < MiniTest::Unit::TestCase
         show_output(result)
 
         # assert that it ran correctly
-        #errs << "Failed on #{system_type}" unless result.value.valueName == "Success" 
+        # errs << "Failed on #{system_type}" unless result.value.valueName == "Success"
 
         # Save the model
         model.save("#{model_dir}/final.osm", true)
@@ -161,7 +157,7 @@ class AddHVACSystemTest < MiniTest::Unit::TestCase
         annual_run_success = model.run_simulation_and_log_errors("#{model_dir}/AR")
 
         # Log the errors
-        log_messages_to_file("#{model_dir}/openstudio-standards.log", debug=false)
+        log_messages_to_file("#{model_dir}/openstudio-standards.log", debug = false)
 
         # Check that the annual simulation succeeded
         errs << "For #{system_type} annual run failed" unless annual_run_success
@@ -186,9 +182,8 @@ class AddHVACSystemTest < MiniTest::Unit::TestCase
       else
         errs << "For #{system_type} could not determine unmet cooling hours; simulation may have failed."
       end
-
     end
-  
+
     Dir.chdir(start_dir)
 
     # Expected error "Cannot find current Workflow Step"
@@ -196,5 +191,4 @@ class AddHVACSystemTest < MiniTest::Unit::TestCase
 
     return true
   end
-
 end
