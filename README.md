@@ -1,4 +1,7 @@
 # cli-demo
+
+[![Build Status](https://travis-ci.org/NREL/openstudio-cli-demo.svg?branch=master)](https://travis-ci.org/NREL/openstudio-cli-demo)
+
 Demo of the OpenStudio CLI
 
 Download and install [OpenStudio 2.6.0](https://github.com/NREL/OpenStudio/releases/tag/v2.6.0)
