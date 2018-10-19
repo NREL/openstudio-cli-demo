@@ -265,6 +265,13 @@ class CreateTypicalBuildingFromModel < OpenStudio::Measure::ModelMeasure
     use_upstream_args.setDefaultValue(true)
     args << use_upstream_args
 
+      # make force daylight savings on
+      enable_dst = OpenStudio::Measure::OSArgument.makeBoolArgument('enable_dst', true)
+      enable_dst.setDisplayName('Enable Daylight Savings.')
+      enable_dst.setDescription('By default this will force dayligint savsings to be enabled. Set to false if in a location where DST is not followed, or if needed for specific use case.')
+      enable_dst.setDefaultValue(true)
+      args << enable_dst
+
     return args
   end
 
@@ -311,6 +318,16 @@ class CreateTypicalBuildingFromModel < OpenStudio::Measure::ModelMeasure
 
     # Make the standard applier
     standard = Standard.build((args['template']).to_s)
+
+    # make sure daylight savings is turned on up prior to any sizing runs being done.
+    if args['enable_dst']
+      start_date  = '2nd Sunday in March'
+      end_date = '1st Sunday in November'
+
+      runperiodctrl_daylgtsaving = model.getRunPeriodControlDaylightSavingTime
+      runperiodctrl_daylgtsaving.setStartDate(start_date)
+      runperiodctrl_daylgtsaving.setEndDate(end_date)
+    end
 
     # add internal loads to space types
     if args['add_space_type_loads']

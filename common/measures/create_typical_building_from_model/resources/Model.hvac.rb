@@ -196,8 +196,7 @@ class OpenStudio::Model::Model
       standard.model_add_hvac_system(self, 'PVAV PFP Boxes', ht = 'Electricity', znht = 'Electricity', cl = 'Electricity', zones)
 
     when 'Residential forced air'
-      standard.model_add_hvac_system(self, 'Unit Heaters', ht = 'NaturalGas', znht = nil, cl = nil, heated_zones)
-
+      standard.model_add_hvac_system(self, 'Residential Forced Air Furnace with AC', ht = 'NaturalGas', znht = nil, cl = nil, zones)
     when 'Residential forced air cooling hot water baseboard heat'
       standard.model_add_hvac_system(self, 'Residential AC', ht = nil, znht = nil, cl = 'Electricity', cooled_zones)
       standard.model_add_hvac_system(self, 'Baseboards', ht = 'NaturalGas', znht = nil, cl = nil, heated_zones)

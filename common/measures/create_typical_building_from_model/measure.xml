@@ -2,8 +2,8 @@
   <schema_version>3.0</schema_version>
   <name>create_typical_building_from_model</name>
   <uid>339a2e3a-273c-4494-bb50-bfe586a0647c</uid>
-  <version_id>3b5c5648-10e1-47ce-ad75-2ca8414b2ef6</version_id>
-  <version_modified>20180730T221524Z</version_modified>
+  <version_id>4ab166a4-6a65-4bbd-8218-0bebc465be30</version_id>
+  <version_modified>20181003T175818Z</version_modified>
   <xml_checksum>EE13F09F</xml_checksum>
   <class_name>CreateTypicalBuildingFromModel</class_name>
   <display_name>Create Typical Building from Model</display_name>
@@ -596,6 +596,25 @@
         </choice>
       </choices>
     </argument>
+    <argument>
+      <name>enable_dst</name>
+      <display_name>Enable Daylight Savings.</display_name>
+      <description>By default this will force dayligint savsings to be enabled. Set to false if in a location where DST is not followed, or if needed for specific use case.</description>
+      <type>Boolean</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>true</default_value>
+      <choices>
+        <choice>
+          <value>true</value>
+          <display_name>true</display_name>
+        </choice>
+        <choice>
+          <value>false</value>
+          <display_name>false</display_name>
+        </choice>
+      </choices>
+    </argument>
   </arguments>
   <outputs/>
   <provenances/>
@@ -661,18 +680,6 @@
       <checksum>3F28DB5B</checksum>
     </file>
     <file>
-      <filename>Model.hvac.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>AE1BD721</checksum>
-    </file>
-    <file>
-      <filename>create_typical_building_from_model_test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>1CDEFD08</checksum>
-    </file>
-    <file>
       <filename>os_lib_helper_methods.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
@@ -693,7 +700,25 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>1F24FFEF</checksum>
+      <checksum>9F743109</checksum>
+    </file>
+    <file>
+      <filename>create_typical_building_from_model_test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>B803F1C0</checksum>
+    </file>
+    <file>
+      <filename>Model.hvac.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>BBB04866</checksum>
+    </file>
+    <file>
+      <filename>USA_TX_Houston-Bush.Intercontinental.AP.722430_TMY3.epw</filename>
+      <filetype>epw</filetype>
+      <usage_type>test</usage_type>
+      <checksum>EE565FCC</checksum>
     </file>
   </files>
 </measure>
