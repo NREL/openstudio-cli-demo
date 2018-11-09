@@ -6,17 +6,17 @@ class ImportGbxml < OpenStudio::Measure::ModelMeasure
 
   # human readable name
   def name
-    return "ImportGbxml"
+    return 'ImportGbxml'
   end
 
   # human readable description
   def description
-    return "Import a gbXML file"
+    return 'Import a gbXML file'
   end
 
   # human readable description of modeling approach
   def modeler_description
-    return "Import a gbXML file"
+    return 'Import a gbXML file'
   end
 
   # define the arguments that the user will input
@@ -24,9 +24,9 @@ class ImportGbxml < OpenStudio::Measure::ModelMeasure
     args = OpenStudio::Measure::OSArgumentVector.new
 
     # the name of the space to add to the model
-    gbxml_file_name = OpenStudio::Measure::OSArgument.makeStringArgument("gbxml_file_name", true)
-    gbxml_file_name.setDisplayName("gbXML filename")
-    gbxml_file_name.setDescription("Filename or full path to gbXML file.")
+    gbxml_file_name = OpenStudio::Measure::OSArgument.makeStringArgument('gbxml_file_name', true)
+    gbxml_file_name.setDisplayName('gbXML filename')
+    gbxml_file_name.setDescription('Filename or full path to gbXML file.')
     args << gbxml_file_name
 
     return args
@@ -42,21 +42,21 @@ class ImportGbxml < OpenStudio::Measure::ModelMeasure
     end
 
     # assign the user inputs to variables
-    gbxml_file_name = runner.getStringArgumentValue("gbxml_file_name", user_arguments)
+    gbxml_file_name = runner.getStringArgumentValue('gbxml_file_name', user_arguments)
 
     # check the space_name for reasonableness
     if gbxml_file_name.empty?
-      runner.registerError("Empty gbXML filename was entered.")
+      runner.registerError('Empty gbXML filename was entered.')
       return false
     end
-    
+
     # find the gbXML file
     path = runner.workflow.findFile(gbxml_file_name)
     if path.empty?
       runner.registerError("Could not find gbXML filename '#{gbxml_file_name}'.")
       return false
     end
-    
+
     # translate gbXML to model
     translator = OpenStudio::GbXML::GbXMLReverseTranslator.new
     new_model = translator.loadModel(path.get)
@@ -65,39 +65,32 @@ class ImportGbxml < OpenStudio::Measure::ModelMeasure
       return false
     end
     new_model = new_model.get
-    
+
     # temporarily remove space types from gbxml
-    new_model.getSpaceTypes.each do |space_type|
-      space_type.remove
-    end
-    
+    new_model.getSpaceTypes.each { |space_type| space_type.remove }
+
     # add fake space type at the building level
     space_type = OpenStudio::Model::SpaceType.new(new_model)
     space_type.setStandardsBuildingType('Office')
     space_type.setStandardsSpaceType('WholeBuilding - Md Office')
-    
+
     building = new_model.getBuilding
     building.setSpaceType(space_type)
     building.setStandardsBuildingType('Office')
 
     # pull original weather file object over
     weatherFile = new_model.getOptionalWeatherFile
-    if not weatherFile.empty?
+    unless weatherFile.empty?
       weatherFile.get.remove
     end
-    originalWeatherFile = model.getOptionalWeatherFile
-    if not originalWeatherFile.empty?
+    unless originalWeatherFile.empty?
       originalWeatherFile.get.clone(new_model)
     end
     runner.registerInfo("Replacing alternate model's weather file object.")
 
     # pull original design days over
-    new_model.getDesignDays.each { |designDay|
-      designDay.remove
-    }
-    model.getDesignDays.each { |designDay|
-      designDay.clone(new_model)
-    }
+    new_model.getDesignDays.each { |designDay| designDay.remove }
+    model.getDesignDays.each { |designDay| designDay.clone(new_model) }
     runner.registerInfo("Replacing alternate model's design day objects.")
 
     # pull over original water main temps
@@ -113,7 +106,7 @@ class ImportGbxml < OpenStudio::Measure::ModelMeasure
     # swap underlying data in model with underlying data in new_model
     # model = new_model DOES NOT work
     # model.swap(new_model) IS NOT reliable
-    
+
     # alternative swap
     # remove existing objects from model
     handles = OpenStudio::UUIDVector.new
@@ -122,12 +115,10 @@ class ImportGbxml < OpenStudio::Measure::ModelMeasure
     end
     model.removeObjects(handles)
     # add new file to empty model
-    model.addObjects( new_model.toIdfFile.objects )
+    model.addObjects(new_model.toIdfFile.objects)
 
     return true
-
   end
-  
 end
 
 # register the measure to be used by the application
