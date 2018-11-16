@@ -50,7 +50,7 @@ jobs:
         - cat basic_osw/run/measure_attributes.json
         - docker run -v $(pwd):/var/simdata/openstudio nrel/openstudio-cli:$OPENSTUDIO_VERSION openstudio run -w basic_osw/in.osw
         - cat basic_osw/run/measure_attributes.json
-        # Wait until 2.6.0 or 2.6.1 is updated with the most recent standards to reenable gbxml test
-        # - docker run -v $(pwd):/var/simdata/openstudio nrel/openstudio:$OPENSTUDIO_VERSION openstudio run -w gbxml_osw/in.osw
-        # The command above does not return a non-zero exist status, so look for the measure_attributes.json file
-        # - cat gbxml_osw/run/measure_attributes.json
+        - docker run -v $(pwd):/var/simdata/openstudio nrel/openstudio:$OPENSTUDIO_VERSION openstudio run -w gbxml_osw/in.osw
+        - cat gbxml_osw/run/measure_attributes.json
+        - docker run -v $(pwd):/var/simdata/openstudio nrel/openstudio-cli:$OPENSTUDIO_VERSION openstudio run -w gbxml_osw/in.osw
+        - cat gbxml_osw/run/measure_attributes.json
