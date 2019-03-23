@@ -83,6 +83,7 @@ class ImportGbxml < OpenStudio::Measure::ModelMeasure
     unless weatherFile.empty?
       weatherFile.get.remove
     end
+    originalWeatherFile = model.getOptionalWeatherFile
     unless originalWeatherFile.empty?
       originalWeatherFile.get.clone(new_model)
     end
