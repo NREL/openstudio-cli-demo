@@ -36,6 +36,10 @@ class CreateTypicalBuildingFromModel_Test < Minitest::Test
       model = model.get
     end
 
+    # set the weather file for the test model
+    epw_file = OpenStudio::EpwFile.new("#{__dir__}/USA_TX_Houston-Bush.Intercontinental.AP.722430_TMY3.epw")
+    OpenStudio::Model::WeatherFile.setWeatherFile(model, epw_file).get
+
     # get arguments
     arguments = measure.arguments(model)
     argument_map = OpenStudio::Measure.convertOSArgumentVectorToMap(arguments)

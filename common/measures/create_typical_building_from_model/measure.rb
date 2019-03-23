@@ -265,6 +265,13 @@ class CreateTypicalBuildingFromModel < OpenStudio::Measure::ModelMeasure
     use_upstream_args.setDefaultValue(true)
     args << use_upstream_args
 
+      # make force daylight savings on
+      enable_dst = OpenStudio::Measure::OSArgument.makeBoolArgument('enable_dst', true)
+      enable_dst.setDisplayName('Enable Daylight Savings.')
+      enable_dst.setDescription('By default this will force dayligint savsings to be enabled. Set to false if in a location where DST is not followed, or if needed for specific use case.')
+      enable_dst.setDefaultValue(true)
+      args << enable_dst
+
     return args
   end
 
@@ -307,10 +314,20 @@ class CreateTypicalBuildingFromModel < OpenStudio::Measure::ModelMeasure
     runner.registerInitialCondition("The building started with #{initial_objects} objects.")
 
     # open channel to log messages
-    OsLib_HelperMethods.setup_log_msgs(runner)
+    reset_log
 
     # Make the standard applier
     standard = Standard.build((args['template']).to_s)
+
+    # make sure daylight savings is turned on up prior to any sizing runs being done.
+    if args['enable_dst']
+      start_date  = '2nd Sunday in March'
+      end_date = '1st Sunday in November'
+
+      runperiodctrl_daylgtsaving = model.getRunPeriodControlDaylightSavingTime
+      runperiodctrl_daylgtsaving.setStartDate(start_date)
+      runperiodctrl_daylgtsaving.setEndDate(end_date)
+    end
 
     # add internal loads to space types
     if args['add_space_type_loads']
@@ -397,6 +414,7 @@ class CreateTypicalBuildingFromModel < OpenStudio::Measure::ModelMeasure
         runner.registerInfo("Adding default construction set named #{bldg_def_const_set.name}")
       else
         runner.registerError("Could not create default construction set for the building type #{lookup_building_type} in climate zone #{climate_zone}.")
+        log_messages_to_runner(runner, debug = true)
         return false
       end
 
@@ -522,6 +540,7 @@ class CreateTypicalBuildingFromModel < OpenStudio::Measure::ModelMeasure
     # add daylight controls, need to perform a sizing run for 2010
     if args['template'] == '90.1-2010'
       if standard.model_run_sizing_run(model, "#{Dir.pwd}/SRvt") == false
+        log_messages_to_runner(runner, debug = true)
         return false
       end
     end
@@ -583,72 +602,74 @@ class CreateTypicalBuildingFromModel < OpenStudio::Measure::ModelMeasure
       end
 
       case args['system_type']
-        when 'Inferred'
+      when 'Inferred'
 
-          # Get the hvac delivery type enum
-          hvac_delivery = case args['hvac_delivery_type']
-                          when 'Forced Air'
-                            'air'
-                          when 'Hydronic'
-                            'hydronic'
-                          end
+        # Get the hvac delivery type enum
+        hvac_delivery = case args['hvac_delivery_type']
+                        when 'Forced Air'
+                          'air'
+                        when 'Hydronic'
+                          'hydronic'
+                        end
 
-          # Group the zones by occupancy type.  Only split out
-          # non-dominant groups if their total area exceeds the limit.
-          sys_groups = standard.model_group_zones_by_type(model, OpenStudio.convert(20_000, 'ft^2', 'm^2').get)
+        # Group the zones by occupancy type.  Only split out non-dominant groups if their total area exceeds the limit.
+        sys_groups = standard.model_group_zones_by_type(model, OpenStudio.convert(20_000, 'ft^2', 'm^2').get)
 
-          # For each group, infer the HVAC system type.
-          sys_groups.each do |sys_group|
-            # Infer the primary system type
-            # runner.registerInfo("template = #{args['template']}, climate_zone = #{climate_zone}, occ_type = #{sys_group['type']}, hvac_delivery = #{hvac_delivery}, htg_src = #{args['htg_src']}, clg_src = #{args['clg_src']}, area_ft2 = #{sys_group['area_ft2']}, num_stories = #{sys_group['stories']}")
-            sys_type, central_htg_fuel, zone_htg_fuel, clg_fuel = standard.model_typical_hvac_system_type(model,
-                                                                                                          climate_zone,
-                                                                                                          sys_group['type'],
-                                                                                                          hvac_delivery,
-                                                                                                          args['htg_src'],
-                                                                                                          args['clg_src'],
-                                                                                                          OpenStudio.convert(sys_group['area_ft2'], 'ft^2', 'm^2').get,
-                                                                                                          sys_group['stories'])
+        # For each group, infer the HVAC system type.
+        sys_groups.each do |sys_group|
+          # Infer the primary system type
+          # runner.registerInfo("template = #{args['template']}, climate_zone = #{climate_zone}, occ_type = #{sys_group['type']}, hvac_delivery = #{hvac_delivery}, htg_src = #{args['htg_src']}, clg_src = #{args['clg_src']}, area_ft2 = #{sys_group['area_ft2']}, num_stories = #{sys_group['stories']}")
+          sys_type, central_htg_fuel, zone_htg_fuel, clg_fuel = standard.model_typical_hvac_system_type(model,
+                                                                                                        climate_zone,
+                                                                                                        sys_group['type'],
+                                                                                                        hvac_delivery,
+                                                                                                        args['htg_src'],
+                                                                                                        args['clg_src'],
+                                                                                                        OpenStudio.convert(sys_group['area_ft2'], 'ft^2', 'm^2').get,
+                                                                                                        sys_group['stories'])
 
-            # Infer the secondary system type for multizone systems
-            sec_sys_type = case sys_type
-                           when 'PVAV Reheat', 'VAV Reheat'
-                             'PSZ-AC'
-                           when 'PVAV PFP Boxes', 'VAV PFP Boxes'
-                             'PSZ-HP'
-                           else
-                             sys_type # same as primary system type
-                           end
+          # Infer the secondary system type for multizone systems
+          sec_sys_type = case sys_type
+                         when 'PVAV Reheat', 'VAV Reheat'
+                           'PSZ-AC'
+                         when 'PVAV PFP Boxes', 'VAV PFP Boxes'
+                           'PSZ-HP'
+                         else
+                           sys_type # same as primary system type
+                         end
 
-            # Group zones by story
-            story_zone_lists = standard.model_group_zones_by_story(model, sys_group['zones'])
+          # Group zones by story
+          story_zone_lists = standard.model_group_zones_by_story(model, sys_group['zones'])
 
-            # On each story, add the primary system to the primary zones
-            # and add the secondary system to any zones that are different.
-            story_zone_lists.each do |story_group|
-              # Differentiate primary and secondary zones, based on
-              # operating hours and internal loads (same as 90.1 PRM)
-              pri_sec_zone_lists = standard.model_differentiate_primary_secondary_thermal_zones(model, story_group)
-              # Add the primary system to the primary zones
-              standard.model_add_hvac_system(model, sys_type, central_htg_fuel, zone_htg_fuel, clg_fuel, pri_sec_zone_lists['primary'])
-              # Add the secondary system to the secondary zones (if any)
-              if !pri_sec_zone_lists['secondary'].empty?
-                standard.model_add_hvac_system(model, sec_sys_type, central_htg_fuel, zone_htg_fuel, clg_fuel, pri_sec_zone_lists['secondary'])
-              end
+          # On each story, add the primary system to the primary zones
+          # and add the secondary system to any zones that are different.
+          story_zone_lists.each do |story_group|
+            # Differentiate primary and secondary zones, based on
+            # operating hours and internal loads (same as 90.1 PRM)
+            pri_sec_zone_lists = standard.model_differentiate_primary_secondary_thermal_zones(model, story_group)
+            # Add the primary system to the primary zones
+            standard.model_add_hvac_system(model, sys_type, central_htg_fuel, zone_htg_fuel, clg_fuel, pri_sec_zone_lists['primary'])
+            # Add the secondary system to the secondary zones (if any)
+            if !pri_sec_zone_lists['secondary'].empty?
+              standard.model_add_hvac_system(model, sec_sys_type, central_htg_fuel, zone_htg_fuel, clg_fuel, pri_sec_zone_lists['secondary'])
             end
           end
+        end
 
-        else
+      else # HVAC system_type specified
 
+        # Group the zones by occupancy type.  Only split out non-dominant groups if their total area exceeds the limit.
+        sys_groups = standard.model_group_zones_by_type(model, OpenStudio.convert(20_000, 'ft^2', 'm^2').get)
+        sys_groups.each do |sys_group|
           # Group the zones by story
-          story_groups = standard.model_group_zones_by_story(model, model.getThermalZones)
+          story_groups = standard.model_group_zones_by_story(model, sys_group['zones'])
 
           # Add the user specified HVAC system for each story.
           # Single-zone systems will get one per zone.
           story_groups.each do |zones|
             model.add_cbecs_hvac_system(standard, args['system_type'], zones)
           end
-
+        end
       end
     end
 
@@ -666,6 +687,7 @@ class CreateTypicalBuildingFromModel < OpenStudio::Measure::ModelMeasure
 
           # Perform a sizing run
           if standard.model_run_sizing_run(model, "#{Dir.pwd}/SR1") == false
+            log_messages_to_runner(runner, debug = true)
             return false
           end
 
@@ -695,7 +717,7 @@ class CreateTypicalBuildingFromModel < OpenStudio::Measure::ModelMeasure
     runner.registerFinalCondition("The building finished with #{model.getModelObjects.size} objects.")
 
     # log messages to info messages
-    OsLib_HelperMethods.log_msgs
+    log_messages_to_runner(runner, debug = false)
 
     return true
   end

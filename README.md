@@ -4,7 +4,7 @@
 
 Demo of the OpenStudio CLI
 
-Download and install [OpenStudio 2.6.0](https://github.com/NREL/OpenStudio/releases/tag/v2.6.0)
+Download and install [OpenStudio 2.7.0](https://github.com/NREL/OpenStudio/releases/tag/v2.7.0)
 
 From the command line run `openstudio run -w basic_osw/in.osw`
 
@@ -22,8 +22,8 @@ To run the demo within a Docker container first [install Docker](https://www.doc
 
 ```
 cd cli-demo
-docker run -v $(pwd):/var/simdata/openstudio nrel/openstudio:2.6.0 openstudio run -w basic_osw/in.osw
-docker run -v $(pwd):/var/simdata/openstudio nrel/openstudio:2.6.0 openstudio run -w gbxml_osw/in.osw
+docker run -v $(pwd):/var/simdata/openstudio nrel/openstudio:2.7.0 openstudio run -w basic_osw/in.osw
+docker run -v $(pwd):/var/simdata/openstudio nrel/openstudio:2.7.0 openstudio run -w gbxml_osw/in.osw
 ```
 
 The command above will download the OpenStudio docker container from [Docker Hub](https://hub.docker.com/r/nrel/openstudio/tags/), mount your local directory into the docker container, and call the OpenStudio CLI to run the basic_osw workflow.
