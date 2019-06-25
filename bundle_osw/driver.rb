@@ -23,6 +23,10 @@ gemfile_lock = File.join(root_dir, 'Gemfile.lock')
 FileUtils.rm_rf(bundle_dir) if File.exist?(bundle_dir)
 FileUtils.rm_f(gemfile_lock) if File.exist?(gemfile_lock)
 
+# figure out where to do this
+idf_file = File.join(run_dir, 'in.idf')
+FileUtils.rm_rf(idf_file) if File.exist?(idf_file)
+
 bundle_without = []
 runner = OpenStudio::Extension::Runner.new(File.dirname(__FILE__), bundle_without)
 runner.run_osw(in_osw, run_dir)

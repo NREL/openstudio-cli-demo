@@ -2,25 +2,32 @@ source "http://rubygems.org"
 
 allow_local = false
 
-if allow_local && File.exists?('../OpenStudio-extension-gem')
+if allow_local && File.exists?('../../OpenStudio-extension-gem')
   # gem 'openstudio-extension', github: 'NREL/OpenStudio-extension-gem', branch: 'develop'
-  gem 'openstudio-extension', path: '../OpenStudio-extension-gem'
+  gem 'openstudio-extension', path: '../../OpenStudio-extension-gem'
 else
   gem 'openstudio-extension', github: 'NREL/OpenStudio-extension-gem', branch: 'develop'
 end
 
-if allow_local && File.exist?('../openstudio-common-measures-gem')
-  # gem 'openstudio-common-measures', github: 'NREL/openstudio-common-measures-gem', branch: 'develop'
-  gem 'openstudio-common-measures', path: '../openstudio-common-measures-gem'
+#if allow_local && File.exists?('../../OpenStudio-workflow-gem')
+  # gem 'openstudio-workflow', github: 'NREL/OpenStudio-workflow-gem', branch: 'extension_gem'
+  gem 'openstudio-workflow', path: '../../OpenStudio-workflow-gem'
+#else
+#  gem 'openstudio-workflow', github: 'NREL/OpenStudio-workflow-gem', branch: 'extension_gem'
+#end
+
+if allow_local && File.exist?('../../openstudio-common-measures-gem')
+  # gem 'openstudio-common-measures', github: 'NREL/openstudio-common-measures-gem', branch: 'update_2_8_0'
+  gem 'openstudio-common-measures', path: '../../openstudio-common-measures-gem'
 else
-  gem 'openstudio-common-measures', github: 'NREL/openstudio-common-measures-gem', branch: 'develop'
+  gem 'openstudio-common-measures', github: 'NREL/openstudio-common-measures-gem', branch: 'update_2_8_0'
 end
 
-if allow_local && File.exist?('../openstudio-model-articulation-gem')
-  # gem 'openstudio-model-articulation', github: 'NREL/openstudio-model-articulation-gem', branch: 'develop'
-  gem 'openstudio-model-articulation', path: '../openstudio-model-articulation-gem'
+if allow_local && File.exist?('../../openstudio-model-articulation-gem')
+  # gem 'openstudio-model-articulation', github: 'NREL/openstudio-model-articulation-gem', branch: 'update_2_8_0'
+  gem 'openstudio-model-articulation', path: '../../openstudio-model-articulation-gem'
 else
-  gem 'openstudio-model-articulation', github: 'NREL/openstudio-model-articulation-gem', branch: 'develop'
+  gem 'openstudio-model-articulation', github: 'NREL/openstudio-model-articulation-gem', branch: 'update_2_8_0'
 end
 
 gem 'openstudio-standards', '0.2.9' # doesn't work in 0.2.8?
