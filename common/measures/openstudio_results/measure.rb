@@ -123,6 +123,14 @@ class OpenStudioResults < OpenStudio::Measure::ReportingMeasure
   def arguments
     args = OpenStudio::Measure::OSArgumentVector.new
 
+    chs = OpenStudio::StringVector.new
+    chs << 'IP'
+    chs << 'SI'
+    units = OpenStudio::Measure::OSArgument.makeChoiceArgument('units', chs, true)
+    units.setDisplayName('Which Unit System do you want to use?')
+    units.setDefaultValue('IP')
+    args << units
+
     # populate arguments
     possible_sections.each do |method_name|
       # get display name
@@ -132,6 +140,14 @@ class OpenStudioResults < OpenStudio::Measure::ReportingMeasure
       arg.setDefaultValue(true)
       args << arg
     end
+
+    # monthly_details (added this argument to avoid cluttering up output for use cases where monthly data isn't needed)
+    # todo - could extend outputs to list these outputs when argument is true
+    reg_monthly_details = OpenStudio::Measure::OSArgument.makeBoolArgument('reg_monthly_details', true)
+    reg_monthly_details.setDisplayName('Report monthly fuel and enduse breakdown to registerValue')
+    reg_monthly_details.setDescription('This argument does not effect HTML file, instead it makes data from individal cells of monthly tables avaiable for machine readable values in the resulting OpenStudio Workflow file.')
+    reg_monthly_details.setDefaultValue(false) # set to false so no impact on existing projects using the measure
+    args << reg_monthly_details
 
     args
   end
@@ -153,6 +169,25 @@ class OpenStudioResults < OpenStudio::Measure::ReportingMeasure
     if runner.getBoolArgumentValue('zone_condition_section', user_arguments)
       result << OpenStudio::IdfObject.load('Output:Variable,,Zone Air Temperature,hourly;').get
       result << OpenStudio::IdfObject.load('Output:Variable,,Zone Air Relative Humidity,hourly;').get
+    end
+
+    # gather monthly consumption data for all possible additional fuels
+    category_strs = []
+    OpenStudio::EndUseCategoryType.getValues.each do |category_type|
+      category_str = OpenStudio::EndUseCategoryType.new(category_type).valueDescription
+      category_strs << category_str
+    end
+    additional_fuel_types = ['FuelOil#1', 'FuelOil#2', 'PropaneGas', 'Coal', 'Diesel', 'Gasoline', 'OtherFuel1', 'OtherFuel2']
+    additional_fuel_types.each do |additional_fuel_type|
+      monthly_array = ['Output:Table:Monthly']
+      monthly_array << 'Building Energy Performance - FuelOil#1'
+      monthly_array << '2'
+      category_strs.each do |category_string|
+        monthly_array << "#{category_string}:#{additional_fuel_type}"
+        monthly_array << 'SumOrAverage'
+      end
+      # add ; to end of string
+      result << OpenStudio::IdfObject.load("#{monthly_array.join(',')};").get
     end
 
     result
@@ -198,9 +233,15 @@ class OpenStudioResults < OpenStudio::Measure::ReportingMeasure
     unless args
       return false
     end
+    units = args['units']
+    if units == 'IP'
+      is_ip_units = true
+    else
+      is_ip_units = false
+    end
 
     # reporting final condition
-    runner.registerInitialCondition('Gathering data from EnergyPlus SQL file and OSM model.')
+    runner.registerInitialCondition("Gathering data from EnergyPlus SQL file and OSM model. Will report in #{units} Units")
 
     # create a array of sections to loop through in erb file
     @sections = []
@@ -217,6 +258,15 @@ class OpenStudioResults < OpenStudio::Measure::ReportingMeasure
       return false
     end
 
+    begin
+      runner.registerValue('standards_gem_version', OpenstudioStandards::VERSION)
+    rescue StandardError
+    end
+    begin
+      runner.registerValue('workflow_gem_version', OpenStudio::Workflow::VERSION)
+    rescue StandardError
+    end
+
     if energy_plus_area_units.get.first.to_s == 'm2'
 
       # generate data for requested sections
@@ -225,12 +275,12 @@ class OpenStudioResults < OpenStudio::Measure::ReportingMeasure
         begin
           next unless args[method_name]
           section = false
-          eval("section = OsLib_Reporting.#{method_name}(model,sql_file,runner,false)")
+          eval("section = OsLib_Reporting.#{method_name}(model,sql_file,runner,false,is_ip_units)")
           display_name = eval("OsLib_Reporting.#{method_name}(nil,nil,nil,true)[:title]")
           if section
             @sections << section
             sections_made += 1
-            # look for emtpy tables and warn if skipped because returned empty
+            # look for empty tables and warn if skipped because returned empty
             section[:tables].each do |table|
               if !table
                 runner.registerWarning("A table in #{display_name} section returned false and was skipped.")

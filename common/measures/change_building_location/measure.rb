@@ -37,7 +37,6 @@
 # Simple measure to load the EPW file and DDY file
 
 class ChangeBuildingLocation < OpenStudio::Measure::ModelMeasure
-
   Dir[File.dirname(__FILE__) + '/resources/*.rb'].each { |file| require file }
 
   # resource file modules
@@ -83,6 +82,12 @@ class ChangeBuildingLocation < OpenStudio::Measure::ModelMeasure
     climate_zone.setDefaultValue('Lookup From Stat File')
     args << climate_zone
 
+    set_year = OpenStudio::Measure::OSArgument.makeIntegerArgument('set_year', true)
+    set_year.setDisplayName('Set Calendar Year')
+    set_year.setDefaultValue 0
+    set_year.setDescription('This will impact the day of the week the simulation starts on. An input value of 0 will leave the year un-altered')
+    args << set_year
+
     # make an argument for use_upstream_args
     use_upstream_args = OpenStudio::Measure::OSArgument.makeBoolArgument('use_upstream_args', true)
     use_upstream_args.setDisplayName('Use Upstream Argument Values')
@@ -103,13 +108,13 @@ class ChangeBuildingLocation < OpenStudio::Measure::ModelMeasure
 
     # lookup and replace argument values from upstream measures
     if args['use_upstream_args'] == true
-      args.each do |arg,value|
+      args.each do |arg, value|
         next if arg == 'use_upstream_args' # this argument should not be changed
         value_from_osw = OsLib_HelperMethods.check_upstream_measure_for_arg(runner, arg)
         if !value_from_osw.empty?
           runner.registerInfo("Replacing argument named #{arg} from current measure with a value of #{value_from_osw[:value]} from #{value_from_osw[:measure_name]}.")
           new_val = value_from_osw[:value]
-          # todo - make code to handle non strings more robust. check_upstream_measure_for_arg coudl pass bakc the argument type
+          # TODO: - make code to handle non strings more robust. check_upstream_measure_for_arg coudl pass bakc the argument type
           if arg == 'total_bldg_floor_area'
             args[arg] = new_val.to_f
           elsif arg == 'num_stories_above_grade'
@@ -152,7 +157,7 @@ class ChangeBuildingLocation < OpenStudio::Measure::ModelMeasure
     weather_file.setLongitude(epw_file.lon)
     weather_file.setTimeZone(epw_file.gmt)
     weather_file.setElevation(epw_file.elevation)
-    weather_file.setString(10, "#{epw_file.filename}")
+    weather_file.setString(10, "file:///#{epw_file.filename}")
 
     weather_name = "#{epw_file.city}_#{epw_file.state}_#{epw_file.country}"
     weather_lat = epw_file.lat
@@ -169,6 +174,12 @@ class ChangeBuildingLocation < OpenStudio::Measure::ModelMeasure
     site.setElevation(weather_elev)
 
     runner.registerInfo("city is #{epw_file.city}. State is #{epw_file.state}")
+
+    # actual year of start date
+    if args['set_year'] > 0
+      model.getYearDescription.setCalendarYear(args['set_year'])
+      runner.registerInfo("Changing Calendar Year to #{args['set_year']},")
+    end
 
     # Add SiteWaterMainsTemperature -- via parsing of STAT file.
     stat_file = "#{File.join(File.dirname(epw_file.filename), File.basename(epw_file.filename, '.*'))}.stat"

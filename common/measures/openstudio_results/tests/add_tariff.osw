@@ -12,6 +12,10 @@
          "measure_dir_name" : "tariff_selection_flat",
          "modeler_description" : "Will add the necessary UtilityCost objects into the model.",
          "name" : "Tariff Selection-Flat"
+      },
+      {
+         "arguments" : {"reg_monthly_details": true},
+         "measure_dir_name" : "openstudio_results"
       }
    ],
    "updated_at" : "20171218T054459Z"
