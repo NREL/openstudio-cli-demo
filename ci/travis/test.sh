@@ -40,5 +40,15 @@ else
             echo "Simulation did not run"
             exit 1
         fi
+
+        openstudio bundle_osw/driver.rb
+        # openstudio isn't returning a non-zero exit status
+        if [ -f basic_osw/run/measure_attributes.json ]; then
+            cat basic_osw/run/measure_attributes.json
+            exit 0
+        else
+            echo "Simulation did not run"
+            exit 1
+        fi
     fi
 fi
