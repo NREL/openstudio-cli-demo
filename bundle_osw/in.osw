@@ -1,0 +1,48 @@
+{
+  "seed_file": null,
+  "weather_file": null,
+  "measure_paths": [],
+  "file_paths": [
+    "../../common/files",
+    "../../common/weather"
+  ],
+  "run_directory": null,
+  "steps": [
+    {
+      "measure_dir_name": "ChangeBuildingLocation",
+      "arguments": {
+        "climate_zone": "Lookup From Stat File",
+        "weather_file_name": "USA_CO_Aurora-Buckley.Field.ANGB.724695_TMY3.epw"
+      }
+    },{
+      "measure_dir_name": "create_bar_from_building_type_ratios",
+      "arguments": {
+        "bldg_type_a": "SmallOffice",
+        "total_bldg_floor_area": 1000,
+        "ns_to_ew_ratio": 1.0,
+        "floor_height": 3.0,
+        "wwr": 0.0
+      } 
+    },{
+      "measure_dir_name": "create_typical_building_from_model",
+      "arguments": {
+        "htg_src": "NaturalGas",
+        "clg_src": "Electricity"
+      } 
+    },{
+      "measure_dir_name": "ReduceElectricEquipmentLoadsByPercentage",
+      "arguments": {
+        "__SKIP__": true,
+        "elecequip_power_reduction_percent": 20
+      } 
+    },{
+      "measure_dir_name": "ReduceLightingLoadsByPercentage",
+      "arguments": {
+        "__SKIP__": true,
+        "lighting_power_reduction_percent": 30
+      } 
+    }
+  ],
+  "name": null,
+  "description": null
+}
