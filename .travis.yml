@@ -44,5 +44,5 @@ jobs:
         - cat basic_osw/run/measure_attributes.json
         - docker run -v $(pwd):/var/simdata/openstudio nrel/openstudio:$OPENSTUDIO_VERSION openstudio run -w gbxml_osw/in.osw
         - cat gbxml_osw/run/measure_attributes.json
-        - docker run -v $(pwd):/var/simdata/openstudio nrel/openstudio:$OPENSTUDIO_VERSION openstudio bundle_osw/driver.rb
-        - cat bundle_osw/run/measure_attributes.json
+        # - docker run -v $(pwd):/var/simdata/openstudio nrel/openstudio:$OPENSTUDIO_VERSION openstudio bundle_osw/driver.rb
+        # - cat bundle_osw/run/measure_attributes.json
