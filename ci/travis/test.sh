@@ -24,20 +24,20 @@ else
         # check if the measure_attributes.json file exists, if not then fail
         if [ -f basic_osw/run/measure_attributes.json ]; then
             cat basic_osw/run/measure_attributes.json
-            exit 0
+            echo "basic_osw passed"
         else
-            echo "Simulation did not run"
+            echo "basic_osw failed"
             exit 1
         fi
 
         # Wait until 2.6.0 or 2.6.1 is updated with the most recent standards to reenable gbxml test
         openstudio run -w gbxml_osw/in.osw
         # openstudio isn't returning a non-zero exit status
-        if [ -f basic_osw/run/measure_attributes.json ]; then
-            cat basic_osw/run/measure_attributes.json
-            exit 0
+        if [ -f gbxml_osw/run/measure_attributes.json ]; then
+            cat gbxml_osw/run/measure_attributes.json
+            echo "gbxml_osw passed"
         else
-            echo "Simulation did not run"
+            echo "gbxml_osw failed"
             exit 1
         fi
 
@@ -45,9 +45,10 @@ else
         # openstudio isn't returning a non-zero exit status
         if [ -f bundle_osw/run/measure_attributes.json ]; then
             cat bundle_osw/run/measure_attributes.json
+            echo "bundle_osw passed"
             exit 0
         else
-            echo "Simulation did not run"
+            echo "bundle_osw failed"
             exit 1
         fi
     fi
