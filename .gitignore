@@ -3,4 +3,5 @@ reports/
 output/
 out.osw
 .idea
-
+bundle_osw/Gemfile.lock
+bundle_osw/.bundle

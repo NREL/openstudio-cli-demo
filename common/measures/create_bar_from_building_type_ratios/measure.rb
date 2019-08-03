@@ -1,13 +1,59 @@
+# *******************************************************************************
+# OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC.
+# All rights reserved.
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# (1) Redistributions of source code must retain the above copyright notice,
+# this list of conditions and the following disclaimer.
+#
+# (2) Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation
+# and/or other materials provided with the distribution.
+#
+# (3) Neither the name of the copyright holder nor the names of any contributors
+# may be used to endorse or promote products derived from this software without
+# specific prior written permission from the respective party.
+#
+# (4) Other than as required in clauses (1) and (2), distributions in any form
+# of modifications or other derivative works may not use the "OpenStudio"
+# trademark, "OS", "os", or any other confusingly similar designation without
+# specific prior written permission from Alliance for Sustainable Energy, LLC.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+# THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE
+# UNITED STATES GOVERNMENT, OR THE UNITED STATES DEPARTMENT OF ENERGY, NOR ANY OF
+# THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+# OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+# STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+# OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# *******************************************************************************
+
 # see the URL below for information on how to write OpenStudio measures
 # http://nrel.github.io/OpenStudio-user-documentation/reference/measure_writing_guide/
 
+require 'openstudio-standards'
+
+begin
+  # load OpenStudio measure libraries from common location
+  require 'measure_resources/os_lib_helper_methods'
+  require 'measure_resources/os_lib_geometry'
+  require 'measure_resources/os_lib_model_generation'
+  require 'measure_resources/os_lib_model_simplification'
+rescue LoadError
+  # common location unavailable, load from local resources
+  require_relative 'resources/os_lib_helper_methods'
+  require_relative 'resources/os_lib_geometry'
+  require_relative 'resources/os_lib_model_generation'
+  require_relative 'resources/os_lib_model_simplification'
+end
+
 # start the measure
 class CreateBarFromBuildingTypeRatios < OpenStudio::Measure::ModelMeasure
-  require 'openstudio-standards'
-
-  # require all .rb files in resources folder
-  Dir[File.dirname(__FILE__) + '/resources/*.rb'].each { |file| require file }
-
   # resource file modules
   include OsLib_HelperMethods
   include OsLib_Geometry
@@ -264,13 +310,13 @@ class CreateBarFromBuildingTypeRatios < OpenStudio::Measure::ModelMeasure
 
     # lookup and replace argument values from upstream measures
     if args['use_upstream_args'] == true
-      args.each do |arg,value|
+      args.each do |arg, value|
         next if arg == 'use_upstream_args' # this argument should not be changed
         value_from_osw = OsLib_HelperMethods.check_upstream_measure_for_arg(runner, arg)
         if !value_from_osw.empty?
           runner.registerInfo("Replacing argument named #{arg} from current measure with a value of #{value_from_osw[:value]} from #{value_from_osw[:measure_name]}.")
           new_val = value_from_osw[:value]
-          # todo - make code to handle non strings more robust. check_upstream_measure_for_arg coudl pass bakc the argument type
+          # TODO: - make code to handle non strings more robust. check_upstream_measure_for_arg coudl pass bakc the argument type
           if arg == 'total_bldg_floor_area'
             args[arg] = new_val.to_f
           elsif arg == 'num_stories_above_grade'
@@ -451,7 +497,7 @@ class CreateBarFromBuildingTypeRatios < OpenStudio::Measure::ModelMeasure
         final_floor_area = ratio_of_bldg_total * total_bldg_floor_area_si # I think I can just pass ratio but passing in area is cleaner
         # only add wwr if 0 used for wwr arg and if space type has wwr as key
         space_types_hash[space_type] = { floor_area: final_floor_area, space_type: space_type }
-        if args['wwr'] == 0 && hash.has_key?(:wwr)
+        if args['wwr'] == 0 && hash.key?(:wwr)
           space_types_hash[space_type][:wwr] = hash[:wwr]
         end
       end

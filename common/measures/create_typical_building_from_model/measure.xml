@@ -2,8 +2,8 @@
   <schema_version>3.0</schema_version>
   <name>create_typical_building_from_model</name>
   <uid>339a2e3a-273c-4494-bb50-bfe586a0647c</uid>
-  <version_id>4ab166a4-6a65-4bbd-8218-0bebc465be30</version_id>
-  <version_modified>20181003T175818Z</version_modified>
+  <version_id>bdd09b31-2cba-414b-865e-0fd4de5df184</version_id>
+  <version_modified>20190424T053244Z</version_modified>
   <xml_checksum>EE13F09F</xml_checksum>
   <class_name>CreateTypicalBuildingFromModel</class_name>
   <display_name>Create Typical Building from Model</display_name>
@@ -692,23 +692,6 @@
       <checksum>67AC7BF3</checksum>
     </file>
     <file>
-      <version>
-        <software_program>OpenStudio</software_program>
-        <identifier>2.0.0</identifier>
-        <min_compatible>2.0.0</min_compatible>
-      </version>
-      <filename>measure.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>script</usage_type>
-      <checksum>9F743109</checksum>
-    </file>
-    <file>
-      <filename>create_typical_building_from_model_test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>B803F1C0</checksum>
-    </file>
-    <file>
       <filename>Model.hvac.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
@@ -719,6 +702,29 @@
       <filetype>epw</filetype>
       <usage_type>test</usage_type>
       <checksum>EE565FCC</checksum>
+    </file>
+    <file>
+      <filename>create_typical_building_from_model_test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>854B19B8</checksum>
+    </file>
+    <file>
+      <filename>GenericGbxml.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>E27658D5</checksum>
+    </file>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>2.0.0</identifier>
+        <min_compatible>2.0.0</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>33FDFF88</checksum>
     </file>
   </files>
 </measure>

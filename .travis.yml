@@ -5,7 +5,7 @@ rvm: 2.2.4
 env:
   global:
     - USE_TESTING_TIMEOUTS: "true"
-    - OPENSTUDIO_VERSION=2.7.1 OPENSTUDIO_VERSION_SHA=b8d47b8b9d
+    - OPENSTUDIO_VERSION=2.8.1 OPENSTUDIO_VERSION_SHA=6914d4f590
 
 before_install:
   - ./ci/travis/setup.sh
@@ -19,11 +19,6 @@ services:
 
 jobs:
   include:
-    - stage: test
-      os: linux
-      sudo: required
-      dist: trusty
-      env: BUILD_TYPE=test
     - stage: test
       os: osx
       osx_image: xcode8 # OSX 10.11
@@ -44,13 +39,10 @@ jobs:
       before_install: skip
       before_script:
         - docker pull nrel/openstudio:$OPENSTUDIO_VERSION
-        - docker pull nrel/openstudio-cli:$OPENSTUDIO_VERSION
       script:
         - docker run -v $(pwd):/var/simdata/openstudio nrel/openstudio:$OPENSTUDIO_VERSION openstudio run -w basic_osw/in.osw
         - cat basic_osw/run/measure_attributes.json
-        - docker run -v $(pwd):/var/simdata/openstudio nrel/openstudio-cli:$OPENSTUDIO_VERSION openstudio run -w basic_osw/in.osw
-        - cat basic_osw/run/measure_attributes.json
         - docker run -v $(pwd):/var/simdata/openstudio nrel/openstudio:$OPENSTUDIO_VERSION openstudio run -w gbxml_osw/in.osw
         - cat gbxml_osw/run/measure_attributes.json
-        - docker run -v $(pwd):/var/simdata/openstudio nrel/openstudio-cli:$OPENSTUDIO_VERSION openstudio run -w gbxml_osw/in.osw
-        - cat gbxml_osw/run/measure_attributes.json
+        # - docker run -v $(pwd):/var/simdata/openstudio nrel/openstudio:$OPENSTUDIO_VERSION openstudio bundle_osw/driver.rb
+        # - cat bundle_osw/run/measure_attributes.json
